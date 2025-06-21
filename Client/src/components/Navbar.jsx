@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import { assets } from '../assets/greencart_assets/assets'
 import { useAppContext } from '../context/useAppContext'
@@ -6,13 +6,20 @@ import { useAppContext } from '../context/useAppContext'
 
 const Navbar = () => {
     const [open, setOpen] = React.useState(false)
-    const {User,setUser,setShowUserLogin,navigate} = useAppContext()
+    const {User,setUser,setShowUserLogin,navigate,searchQuery,setSearchQuery,getCartItemsCount,
+    } = useAppContext()
 
 
     const logout = async () => {
         setUser(null);
         navigate('/');
     }
+
+    useEffect(() => {
+if (searchQuery.length > 0) {
+    navigate('/products');
+}
+    },[searchQuery, navigate])
   return (
     <nav className="flex items-center justify-between px-6 md:px-16  py-4 border-b border-gray-300 bg-white relative transition-all">
 
@@ -27,32 +34,39 @@ const Navbar = () => {
                 <NavLink to='/contact' >Contact</NavLink>
 
                 <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
-                    <input className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500" type="text" placeholder="Search products" />
+                    <input onChange={(e)=>setSearchQuery(e.target.value)} className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500" type="text" placeholder="Search products" />
                     <img className="w-4 h-4" src={assets.search_icon} alt="search icon" />
                 </div>
 
                 <div onClick={()=>(navigate('/cart'))} className="relative cursor-pointer">
                     <img className="w-6 h-6" src={assets.nav_cart_icon} alt="cart icon" />
-                    <button className="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full">3</button>
+                    <button className="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full">{getCartItemsCount()}</button>
                 </div>
-                  {!User ? (<button className="cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full">
+                  {!User ? (<button onClick={()=>setShowUserLogin(true)} className="cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full">
                     Login
                 </button>):
                   (<div className='relative group '>
                     <img src ={assets.profile_icon } className='w-10' alt='profile'/>
                     <ul className='hidden group-hover:block absolute top-10 right-0 bg-white shadow- border border-gray-200 py-2.5 w-30 rounded-md text-sm z-40'>
                         <li onClick={()=>navigate('/my-orders')}className='p-1.5 pl-3 hover:bg-primary/10 cursor-'>My Orders</li>
-                        <li onClick={()=>navigate('/')} className='p-1.5 pl-3 hover:bg-primary/10 cursor-'>Logout</li>
+                        <li onClick={()=>{ setUser(false);navigate('/')}} className='p-1.5 pl-3 hover:bg-primary/10 cursor-'>Logout</li>
                     </ul>
                   </div>)
                   }
                 
             </div>
-
-            <button onClick={() => open ? setOpen(false) : setOpen(true)} aria-label="Menu" className="sm:hidden">
+            <div className='flex items-center gap-4 sm:hidden'>
+                 <div onClick={()=>(navigate('/cart'))} className="relative cursor-pointer">
+                    <img className="w-6 h-6" src={assets.nav_cart_icon} alt="cart icon" />
+                    <button className="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full">{getCartItemsCount()}</button>
+                </div>
+                <button onClick={() => open ? setOpen(false) : setOpen(true)} aria-label="Menu" >
                 {/* Menu Icon SVG */}
              <img src={assets.menu_icon} alt='menu'></img>
             </button>
+            </div>
+
+            
              {/* // Mobile Menu */}
             
            {open &&( <div className={`${open ? 'flex' : 'hidden'} absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex-col items-start gap-2 px-5 text-sm md:hidden z-50`}>

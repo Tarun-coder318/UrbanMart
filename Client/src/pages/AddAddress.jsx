@@ -49,14 +49,14 @@ const AddAddress = () => {
           <form onSubmit={onSubmitHandler} className=" space-y-3 mt-6 text-sm">
             <div className="grid grid-cols-2 gap-4">
               <InputField
-                handleChange={handleChange}
+               onChange={handleChange}
                 address={address}
                 name="firstName"
                 type="text"
                 placeholder="first Name"
               />
               <InputField
-                handleChange={handleChange}
+               onChange={handleChange}
                 address={address}
                 name="lastName"
                 type="text"
@@ -64,14 +64,14 @@ const AddAddress = () => {
               />
             </div>
              <InputField
-                handleChange={handleChange}
+               onChange={handleChange}
                 address={address}
                 name="email"
                 type="text"
                 placeholder="email address"
               />
                <InputField
-                handleChange={handleChange}
+               onChange={handleChange}
                 address={address}
                 name="street"
                 type="text"
@@ -79,14 +79,14 @@ const AddAddress = () => {
               />
                <div className="grid grid-cols-2 gap-4">
               <InputField
-                handleChange={handleChange}
+                onChange={handleChange}
                 address={address}
                 name="city"
                 type="text"
                 placeholder="City"
               />
               <InputField
-                handleChange={handleChange}
+               onChange={handleChange}
                 address={address}
                 name="state"
                 type="text"
@@ -95,14 +95,14 @@ const AddAddress = () => {
             </div>
              <div className="grid grid-cols-2 gap-4">
               <InputField
-                handleChange={handleChange}
+                onChange={handleChange}
                 address={address}
                 name="zipcode"
                 type="text"
                 placeholder="ZipCode"
               />
               <InputField
-                handleChange={handleChange}
+                onChange={handleChange}
                 address={address}
                 name="country"
                 type="text"
@@ -110,7 +110,7 @@ const AddAddress = () => {
               />
             </div>
                 <InputField
-                handleChange={handleChange}
+                onChange={handleChange}
                 address={address}
                 name="phone"
                 type="text"

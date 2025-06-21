@@ -3,7 +3,7 @@ import { assets } from "../assets/greencart_assets/assets";
 import { useAppContext } from "../context/useAppContext";
 const ProductCard = ({products}) => {
     
-  const [ setCount] = React.useState(0);
+
   const {currency,addToCart, removeFromCart,updateCart,navigate,CardItems}=useAppContext(); 
  
 
@@ -11,7 +11,7 @@ const ProductCard = ({products}) => {
  
 
   return products && (
-    <div className="border border-gray-500/20 rounded-md md:px-4 px-3 py-2 bg-white w-full">
+    <div  onClick={()=>{navigate(`/products/${products.category.toLowerCase()}/${products._id}`);scrollTo(0,0)}}className="border border-gray-500/20 rounded-md md:px-4 px-3 py-2 bg-white w-full">
       <div className="group cursor-pointer flex items-center justify-center px-2">
         <img
           className="group-hover:scale-105 transition max-w-26 md:max-w-36"
