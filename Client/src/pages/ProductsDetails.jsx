@@ -13,17 +13,25 @@ const{id}=useParams();
 const[relatedProducts, setRelatedProducts] = useState([]);
 const [thumbnail, setThumbnail] = useState(null);
 
-const product = products.find((item) => item._id === id);
+const product = products.find((item) => item._id.toString() === id);
+console.log("✅ Matched product:", product);
 useEffect(() => {
-if (product){
+if (product&&products.length > 0){
+    console.log("🔍 Current Product:", product);
+    console.log("🔍 All Products:", products);
     let productscpoy= products.slice();
-    productscpoy= productscpoy.filter((item) => item.category === product.category );
+    productscpoy= productscpoy.filter((item) => item.category?.toLowerCase() === product.category?.toLowerCase()  );
+     console.log("🧪 Related products before slice:",productscpoy);
+    
     setRelatedProducts(productscpoy.slice(0, 5));
+     console.log("🧪 Related Products:", productscpoy);
+    
 }
 },[products, product]);
 
 useEffect(() => {
-    setThumbnail(product.image[0]? product.image[0] : null);
+    if(product?.image?.length){ setThumbnail(product.image[0]? product.image[0] : null);}
+   
 },[product]);
 
 if(!product) 
@@ -34,6 +42,7 @@ if(!product)
       </div>
     ); 
 }    
+  
   return  (
    <div className="mt-12">
             <p>
@@ -46,7 +55,7 @@ if(!product)
             <div className="flex flex-col md:flex-row gap-16 mt-4">
                 <div className="flex gap-3">
                     <div className="flex flex-col gap-3">
-                        {product.image.map((image, index) => (
+                        {product.image?.map((image, index) => (
                             <div key={index} onClick={() => setThumbnail(image)} className="border max-w-24 border-gray-500/30 rounded overflow-hidden cursor-pointer" >
                                 <img src={image} alt={`Thumbnail ${index + 1}`} />
                             </div>
@@ -54,7 +63,7 @@ if(!product)
                     </div>
 
                     <div className="border border-gray-500/30 max-w-100 rounded overflow-hidden">
-                        <img src={thumbnail} alt="Selected product" />
+                        <img src={thumbnail} alt="Selected product"  className="w-full h-full object-cover block" />
                     </div>
                 </div>
 
@@ -78,8 +87,8 @@ if(!product)
 
                     <p className="text-base font-medium mt-6">About Product</p>
                     <ul className="list-disc ml-4 text-gray-500/70">
-                        {product.description.map((desc, index) => (
-                            <li key={index}>{desc}</li>
+                        {product.descriptions.map((des, index) => (
+                            <li key={index}>{des}</li>
                         ))}
                     </ul>
 

@@ -1,9 +1,10 @@
 import { Link, NavLink,Outlet } from "react-router-dom";
 import { assets } from "../../assets/greencart_assets/assets";
 import { useAppContext } from "../../context/useAppContext";
+import toast from "react-hot-toast";
 
 const SellerLayout = () => {
-  const { setIsSeller, navigate } = useAppContext();
+  const { setIsSeller, navigate, axios } = useAppContext();
 
   const sidebarLinks = [
     { name: "Add Products", path: "/seller", icon: assets.add_icon },
@@ -16,7 +17,20 @@ const SellerLayout = () => {
   ];
 
   const logout = async () => {
-    setIsSeller(false);
+    try {
+      const {data}= await axios.post('/api/seller/logout')
+    if(data.success){
+      setIsSeller(false);
+      navigate("/seller")
+    }else{
+      toast.error(data.message)
+    }
+    } catch (error) {
+     
+        console.log("Error:", error.response?.data || error.message);
+         toast.error(error.response?.data?.message || error.message);
+      
+    }
   };
 
   return (

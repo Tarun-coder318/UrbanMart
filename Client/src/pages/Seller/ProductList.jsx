@@ -1,8 +1,33 @@
 import React from "react";
 import { useAppContext } from "../../context/useAppContext";
+import toast from "react-hot-toast";
+// import { useEffect } from "react";
 
 const ProductList = () => {
- const {products , currency} = useAppContext();
+ const {products , currency,axios,fetchSellerProducts} = useAppContext();
+ 
+ const inStockToggel=async (id,inStock) => {
+try {
+    const{data}=await axios.post('/api/product/stock',{id,inStock})
+if(data.success){
+  fetchSellerProducts();
+  toast.success(data.message)
+}else{
+  toast.error(data.message)
+}
+   
+} catch (error) {
+    toast.error(error.message)
+}
+ }
+//  useEffect(() => {
+//   if (isSeller) {
+//     fetchSellerProducts();
+//   }
+// }, [isSeller ,fetchSellerProducts]);
+
+ 
+ 
   return (
     <div className="no-scrollbar flex-1 h-[95vh] overflow-y-scroll flex flex-col">
       <div className="w-full md:p-10 p-4">
@@ -37,6 +62,8 @@ const ProductList = () => {
                   <td className="px-4 py-3">
                     <label className="relative inline-flex items-center cursor-pointer text-gray-900 gap-3">
                       <input
+                          onClick={()=>inStockToggel(product._id, !product.inStock)}
+                          checked={product.inStock}
                         type="checkbox"
                         className="sr-only peer"
                       

@@ -1,7 +1,8 @@
 import React from "react";
-import { useAppContext } from "../context/useAppContext"; 
+import { useAppContext } from "../context/useAppContext";
+import toast from "react-hot-toast"; 
 const LoginSingupForm = () => {
-    const { setShowUserLogin,setUser } = useAppContext();
+    const { setShowUserLogin,setUser,axios } = useAppContext();
     const [state, setState] = React.useState("login");
     const [name, setName] = React.useState("");
     const [email, setEmail] = React.useState("");
@@ -9,15 +10,37 @@ const LoginSingupForm = () => {
 
     const submithandler = async (e) => {
         e.preventDefault();
-        setUser({ name:"Tarun Chauhan", email: "tarunchauhan3624@gmail.com" }); 
-        if (state === "login") {
-            // Handle login logic here
-            console.log("Logging in with", { email, password });
+       
+       try {
+         if (state === "login") {
+            const {data}= await axios.post('/api/user/login',{email,password})
+            if(data.success){
+                 console.log("Logging in with", { email, password }); 
+                 setUser(data.user);
+                     setShowUserLogin(false);
+                 toast.success(data.message)
+            }else{
+                   toast.error(data.message)
+            }
+           
         } else {
             // Handle registration logic here
-            console.log("Registering with", { name, email, password });
+                const {data}= await axios.post('/api/user/register',{name,email,password})
+                 if(data.success){
+              console.log("Registering with", { name, email, password });
+                 setUser(data.user);
+                     setShowUserLogin(false);
+                
+                 toast.success(data.message)
+            }else{
+                   toast.error(data.message)
+            }
+         
         }
-        setShowUserLogin(false);
+        
+       } catch (error) {
+         toast.error(error.message)
+       }
     }
 
     return (

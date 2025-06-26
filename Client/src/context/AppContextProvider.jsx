@@ -1,24 +1,95 @@
 import { AppContext } from "./AppContext";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { dummyProducts } from "../assets/greencart_assets/assets";
+// import { dummyProducts } from "../assets/greencart_assets/assets";
 import toast from "react-hot-toast";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_CONNECTION;
 
 const AppContextProvider = ({ children }) => {
   const currency = import.meta.env.VITE_CURRENCY;
 
   const navigate = useNavigate();
 
-  const [User, setUser] = useState(false);
-  const [isSeller, setIsSeller] = useState(false);
+  const [User, setUser] = useState(null);
+  const [isSeller, setIsSeller] = useState(null);
   const [showUserLogin, setShowUserLogin] = useState(false);
   const [products, setProducts] = useState([]);
   const [CardItems, setCardItems] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
 
-  const fetchProducts = async () => {
-    setProducts(dummyProducts);
+  // pageReload After login
+  const checkIsseller = async () => {
+    try {
+      const { data } = await axios.post("/api/seller/is-Sellerauth");
+      if (data.success) {
+        setIsSeller(true);
+      } else {
+        toast.error.message;
+        setIsSeller(false);
+      }
+    } catch (error) {
+      console.log(error.message);
+      setIsSeller(false);
+    }
   };
+  const checkIsUser = async () => {
+    try {
+      const { data } = await axios.get("/api/user/is-auth");
+      if (data.success) {
+        setUser(true);
+        setShowUserLogin(false);
+      
+      } else {
+        setUser(false);
+         if (!window.location.pathname.startsWith("/seller")) {
+    setShowUserLogin(true);  // ✅ Safe to show user form
+  } else {
+    setShowUserLogin(false); // ✅ Don't show user form on seller pages
+  }
+      }
+    } catch (error) {
+      console.log("Auth check failed:", error.message);
+      setUser(false);
+      setShowUserLogin(true);
+    }
+  };
+
+  const fetchSellerProducts = async () => {
+    try {
+      const { data } = await axios.get("/api/product/list");
+      if (data.success) {
+        setProducts(data.products);
+      } else {
+        if (data.message !== "Not Authorized") {
+        toast.error(data.message);
+      }
+      }
+    } catch (error) {
+     if (error.response?.status !== 401) {
+      toast.error(error.message || "Something went wrong");
+    }
+    }
+  };
+   
+  const fetchPublicProducts = async () => {
+  try {
+    const { data } = await axios.get("/api/product/public"); // 🌐 Public
+    if (data.success) {
+      setProducts(data.products);
+    } else {
+    
+        toast.error(data.message);
+      
+    }
+  } catch (error) {
+           toast.error(error.message || "Something went wrong");
+  
+  }
+};
+
 
   //Add to cart function
 
@@ -74,8 +145,34 @@ const AppContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchProducts();
+   
+    checkIsseller();
+    checkIsUser();
+    fetchPublicProducts();
   }, []);
+  useEffect(() => {
+  if (isSeller) {
+    fetchSellerProducts(); // ✅ Now it's safe to fetch seller products
+  }
+}, [isSeller]);
+
+
+useEffect(()=>{
+const updateCart = async () => {
+  try {
+     if (Object.keys(CardItems).length === 0) return;
+    const {data}= await axios.post('/api/cart/cartupdate',{CardItems});
+    if(!data.success){
+toast.error(data.message)
+    }
+  } catch (error) {
+    toast.error(error.message)
+  }
+}
+if(User){
+  updateCart();
+}
+},[CardItems,User])
   const value = {
     navigate,
     User,
@@ -94,7 +191,10 @@ const AppContextProvider = ({ children }) => {
     searchQuery,
     setSearchQuery,
     getCartItemsCount,
-    getCartAmount
+    getCartAmount,
+    axios,
+    fetchSellerProducts,
+    fetchPublicProducts
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
