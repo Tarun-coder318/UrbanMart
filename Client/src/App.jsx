@@ -20,7 +20,7 @@ import SellerLayout from './pages/Seller/SellerLayout.jsx'
 import AddProducts from './pages/Seller/AddProducts.jsx'
 import Order from './pages/Seller/Order.jsx'
 import ProductList from './pages/Seller/ProductList.jsx'
-import Loader from './components/loader.jsx'
+import Loader from './components/Loader.jsx'
 
 
 
