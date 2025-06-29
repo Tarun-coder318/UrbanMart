@@ -23,14 +23,29 @@ ConnectDB();
 await Connectcloudinary();
 const PORT = process.env.PORT ||5000
 
-// Allow multiple Origins 
-const allowedOrigins=['http://localhost:5173']
+
 
 app.post('/stripe', express.raw({type: 'application/json'}), stripeWebhooks);
 
+// Allow multiple Origins 
+const allowedOrigins=['http://localhost:5173']
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like Postman) or from allowedOrigins
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
+
+
+
 //MiddelWare
 app.use(cookieParser());
-app.use(cors({origin : allowedOrigins , credentials:true}));
+// app.use(cors({origin : allowedOrigins , credentials:true}));
 app.use(express.json());
 
 

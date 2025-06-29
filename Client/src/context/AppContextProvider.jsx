@@ -7,6 +7,9 @@ import axios from "axios";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_CONNECTION;
+// ✅ Debug logs
+console.log("🔗 Backend URL:", import.meta.env.VITE_BACKEND_CONNECTION);
+console.log("📦 Axios baseURL:", axios.defaults.baseURL);
 
 const AppContextProvider = ({ children }) => {
   const currency = import.meta.env.VITE_CURRENCY;
