@@ -27,7 +27,7 @@ const AppContextProvider = ({ children }) => {
       if (data.success) {
         setIsSeller(true);
       } else {
-        toast.error.message;
+        toast.error(data.message);
         setIsSeller(false);
       }
     } catch (error) {
@@ -38,9 +38,11 @@ const AppContextProvider = ({ children }) => {
   const checkIsUser = async () => {
     try {
       const { data } = await axios.get("/api/user/is-auth");
+      console.log("🧪 Auth check response:", data);
       if (data.success) {
-        setUser(true);
+        setUser(data.user);
         setShowUserLogin(false);
+        setCardItems(data.user.cardItems)
       
       } else {
         setUser(false);
@@ -79,6 +81,7 @@ const AppContextProvider = ({ children }) => {
     const { data } = await axios.get("/api/product/public"); // 🌐 Public
     if (data.success) {
       setProducts(data.products);
+      
     } else {
     
         toast.error(data.message);
@@ -161,7 +164,7 @@ useEffect(()=>{
 const updateCart = async () => {
   try {
      if (Object.keys(CardItems).length === 0) return;
-    const {data}= await axios.post('/api/cart/cartupdate',{CardItems});
+    const {data}= await axios.post('/api/cart/cartupdate',{ cardItems: CardItems,});
     if(!data.success){
 toast.error(data.message)
     }

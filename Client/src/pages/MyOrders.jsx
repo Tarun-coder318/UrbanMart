@@ -1,18 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/useAppContext";
-import { dummyOrders } from "../assets/greencart_assets/assets";
+// import { dummyOrders } from "../assets/greencart_assets/assets";
+import toast from "react-hot-toast";
 
 const MyOrders = () => {
+  
   const [order, setOrder] = useState([]);
-  const { currency } = useAppContext();
+  const { currency,axios , User } = useAppContext();
 
   const fetchorder = async () => {
-    setOrder(dummyOrders);
+   try {
+     const {data}=await axios('/api/order/getUserOrder')
+     console.log("📦 Raw order data:", data);
+    if(data.success){
+      // toast.success(data.message)
+      setOrder(data.order)
+    }else{
+      setOrder([]);
+      toast.error(data.message)
+    }
+   } catch (error) {
+     toast.error(error.message)
+   }
   };
 
   useEffect(() => {
-    fetchorder();
-  }, []);
+    if(User){
+ fetchorder();
+    }
+   
+  }, [User]);
 
   return ( 
     <div className="mt-10 pb-10">
@@ -53,13 +70,13 @@ const MyOrders = () => {
                 </div>
               </div>
               <div className="text-gray-300 text-lg font-medium ">
-                <p>Quantity:{item.quantity || "1"}</p>
-                <p>Status:{item.status}</p>
+                <p>Quantity:{item.quantity}</p>
+                <p>Status:{order.status ||"proccessing"}</p>
                 <p>Date:{new Date(order.createdAt).toLocaleDateString()}</p>
               </div>
               <p className="text-green-300 text-lg font-medium">
                 Amount:{currency}
-                {item.product.offerPrice * item.quantity}
+  {order.amount}
               </p>
             </div>
           ))}

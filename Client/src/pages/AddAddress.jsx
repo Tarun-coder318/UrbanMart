@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { assets } from "../assets/greencart_assets/assets";
+// import { use } from "react";
+import { useAppContext } from "../context/useAppContext";
+import toast from "react-hot-toast"
+import { useEffect } from "react";
 
 //Input Field Component
-const InputField = ({ type, placeholder, name, handleChange, address }) => (
+const InputField = ({ type, placeholder, name, onChange, address }) => (
   <input className="w-full px-2 py-2.5 border border-gray-500/30 rounded outline-none text-gray-500 focus:border-green-400 transition"
     type={type}
     placeholder={placeholder}
-    onChange={handleChange}
+    onChange={onChange}
     name={name}
     value={address[name]}
     required
@@ -14,6 +18,10 @@ const InputField = ({ type, placeholder, name, handleChange, address }) => (
 );
 
 const AddAddress = () => {
+  const {axios,User,navigate}= useAppContext();
+  console.log("👤 user from context:", User);
+console.log("🆔 user._id:", User?._id);
+
   const [address, setAddresses] = useState({
     firstName: "",
     lastName: "",
@@ -37,7 +45,29 @@ const AddAddress = () => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+      if (!User || !User._id) {
+    toast.error("User info is missing. Cannot add address.");
+    console.log("❌ user or user._id is missing:", User);
+    return;
+  }
+    try {
+      const {data}= await axios.post('/api/address/addAddress',{address,  userId: User?._id })
+      
+      if(data.success){
+        toast.success(data.message)
+        navigate('/cart')
+      }else{
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
   };
+  useEffect(()=>{
+if(User===null){
+  navigate('/cart')
+}
+  },[User,navigate])
   return (
     <div className="mt -16 pb-16">
       <p className="text-2xl md:text-3xl text-gray-500">

@@ -9,11 +9,13 @@ import jwt from "jsonwebtoken";
     return res.json({ success: false, message: "Not Authorized" });
   }
   try {
-    const toeknDecode = jwt.verify(token, process.env.JWT_KEY);
-     console.log("✅ Token Decoded:", toeknDecode);
+    const decoded = jwt.verify(token, process.env.JWT_KEY);
+     console.log("✅ Token Decoded:", decoded);
 
-    if (toeknDecode.id) {
-      req.userId = toeknDecode.id;
+    if (decoded.id) {
+      // req.userId = toeknDecode.id;
+        req.userId = decoded.id; 
+     
       console.log("✅ Set req.userId:", req.userId);
       ;
     }else{
