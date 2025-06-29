@@ -24,7 +24,7 @@ await Connectcloudinary();
 const PORT = process.env.PORT ||5000
 
 // Allow multiple Origins 
-const allowedOrigins=['http://localhost:5173','urbanmart-backend.vercel.app']
+const allowedOrigins=['http://localhost:5173']
 
 app.post('/stripe', express.raw({type: 'application/json'}), stripeWebhooks);
 
