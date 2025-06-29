@@ -23,7 +23,6 @@ import ProductList from './pages/Seller/ProductList.jsx'
 import Loader from './components/Loader.jsx'
 
 
-
 const App = () => {
 
   const isSellerPath = useLocation().pathname.includes('seller');
