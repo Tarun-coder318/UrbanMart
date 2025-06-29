@@ -123,6 +123,7 @@ export const stripeWebhooks = async (req, res) => {
     event = stripeInstance.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
 
   } catch (error) {
+    console.log("❌ Webhook signature error:", error.message);
     res.status(400).send(`Webhook Error: ${error.message}`);
   }
   // Handle the event
@@ -132,15 +133,24 @@ export const stripeWebhooks = async (req, res) => {
       const paymentIntentId = paymentIntent.id;
 
       //getting seesion metadata
-      const session = await stripeInstance.checkout.sessions.list({
-        payment_intent: paymentIntentId,
+      const sessions = await stripeInstance.checkout.sessions.list({
+  payment_intent: paymentIntentId,
+  limit: 1,
+});
 
-      });
-      const { orderId, userId } = session.data[0].metadata;
+const session = sessions.data[0];
+if (!session) {
+  console.log("❌ No session found for payment_intent");
+  return res.status(404).json({ message: "Session not found" });
+}
+
+const { orderId, userId } = session.metadata;
+
       //updating order status
      await Order.findByIdAndUpdate(orderId, {isPaid:true});
      //clearing cart
     await User.findByIdAndUpdate(userId, {cardItems:{}});
+      console.log("✅ Payment succeeded, Order updated & cart cleared");
  break;
     }
    case "payment_intent.payment_failed":{
@@ -150,10 +160,12 @@ export const stripeWebhooks = async (req, res) => {
       //getting seesion metadata
       const session = await stripeInstance.checkout.sessions.list({
         payment_intent: paymentIntentId,
+         limit: 1,
 
       });
       const { orderId} = session.data[0].metadata;
       await Order.findByIdAndDelete(orderId);
+        console.log("🗑️ Payment failed, Order deleted");
       break;
    }
       default:
