@@ -79,7 +79,7 @@ const order = await Order.create({
   })),amount,address,paymentType:"Online"
 })
 //stripe gateway initialize
- const stripeInstance= new Stripe(process.env.STRIPE_SECRETE_KEY);
+ const stripeInstance= new stripe(process.env.STRIPE_SECRETE_KEY);
 
  //create line items for stripe
  const line_items = productData.map((item)=>{
