@@ -83,12 +83,12 @@ export const register= async ( req ,res)=>{
 
  export const logout=async (req,res) => {
     try {
-       res.cookie('token'," ",{
+       res.clearCookie('token',{
        httpOnly:true,
        secure:process.env.NODE_ENV ==='production',
        sameSite:process.env.NODE_ENV ==='production' ? "none" : 'strict',
        expires: new Date(0),
-       path:"/"
+       path:'/'
        } );
        return res.json({success:true,message:"logged out"})
     } catch (error) {

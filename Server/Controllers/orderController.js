@@ -121,6 +121,8 @@ const order = await Order.create({
 //stripe webhooks to verofy payment
 export const stripeWebhooks = async (req, res) => {
   const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
+  console.log("🔑 Stripe Key (CHECK):", process.env.STRIPE_SECRET_KEY);
+
   const sig = req.headers['stripe-signature'];
   let event ;
   try {
