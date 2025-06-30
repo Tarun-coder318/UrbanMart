@@ -20,7 +20,8 @@ import SellerLayout from './pages/Seller/SellerLayout.jsx'
 import AddProducts from './pages/Seller/AddProducts.jsx'
 import Order from './pages/Seller/Order.jsx'
 import ProductList from './pages/Seller/ProductList.jsx'
-import Loader from './components/Loader.jsx'
+
+import Spinner from './components/spinner.jsx'
 
 
 const App = () => {
@@ -41,7 +42,7 @@ const App = () => {
         <Route path='/cart' element={<CartItems />} />
         <Route path ='/Add-address'  element={<AddAddress/>}/>
         <Route path= '/my-orders' element={<MyOrders/>}/>
-          <Route path= '/loader' element={<Loader/>}/>
+          <Route path= '/loader' element={<Spinner/>}/>
         <Route path="/seller" element = {isSeller ? <SellerLayout/>: <SellerLogin/>}>
         <Route index element={isSeller ? <AddProducts/>:null}/>
          <Route path="product-list" element={ <ProductList/>}/>
