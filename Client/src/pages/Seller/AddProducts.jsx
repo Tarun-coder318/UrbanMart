@@ -164,7 +164,7 @@ const AddProducts = () => {
           </div>
         </div>
         <button
-          o
+          onClick={submitHandler}
           className="px-8 py-2.5 bg-green-400 cursor-pointer text-white font-medium rounded"
         >
           ADD

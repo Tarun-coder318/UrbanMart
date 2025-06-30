@@ -39,7 +39,9 @@ const AppContextProvider = ({ children }) => {
     }
   };
   const checkIsUser = async () => {
-    try {
+
+    try
+     {
       const { data } = await axios.get("/api/user/is-auth");
       console.log("🧪 Auth check response:", data);
       if (data.success) {

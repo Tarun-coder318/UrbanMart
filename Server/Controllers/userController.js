@@ -25,9 +25,9 @@ export const register= async ( req ,res)=>{
       const token = jwt.sign({id: user._id},process.env.JWT_KEY, {expiresIn:"7d"} );
       res.cookie('token' , token,{
         httpOnly:true,
-        secure: process.env.NODE_ENV === 'Production',
-        sameSite: process.env.NODE_ENV === 'Production' ? 'none' : 'strict' ,
-        maxAge: 7*24*60*1000,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict' ,
+        maxAge: 7*24*60*60*1000,
       })
       return res.json({success:true, user:{user }, message:'User Created'})
  } catch (error) {
@@ -53,12 +53,15 @@ export const register= async ( req ,res)=>{
         return res.json({success:false,message:"Wrong Passwaord"})
       }
       const token = jwt.sign({id:CheckUserPresent._id}, process.env.JWT_KEY,{expiresIn:"7d"});
+
+      // Set the cookie with the token
       res.cookie("token" , token, {
            httpOnly:true,
            secure: process.env.NODE_ENV === "production" ,
            sameSite: process.env.NODE_ENV ==="production" ? "none" : "strict"  ,
            maxAge:7*24*60*60*1000,
       })
+     
       return res.json({success:true, user:{id:CheckUserPresent._id , name: CheckUserPresent.name, email:CheckUserPresent.email}, message:"User Login"})
      } catch (error) {
        console.log(error.message)

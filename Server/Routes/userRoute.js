@@ -12,6 +12,6 @@ import { authUser } from '../Middelware/authUser.js';
  userRouter.post('/register', register)
  userRouter.post('/login', login)
  userRouter.get('/is-auth' ,authUser, isAuth)
- userRouter.post('/logout' ,authUser, logout)
+ userRouter.post('/logout' , logout)
  export default userRouter
 
