@@ -52,6 +52,8 @@ export const placeOrderStripe = async (req,res) => {
         console.log("📥 items received:", items);
 console.log("📬 address received:", address);
 
+ console.log("🔑 Stripe Key (Vercel):", process.env.STRIPE_SECRET_KEY);
+
 if(!address || items.length===0){
     return res.json({success:false, message:'Invalid Data'})
 }
