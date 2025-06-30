@@ -80,6 +80,8 @@ const order = await Order.create({
 })
 //stripe gateway initialize
  const stripeInstance= new Stripe(process.env.STRIPE_SECRET_KEY);
+ console.log("🔑 Stripe Key:", process.env.STRIPE_SECRET_KEY);
+
 
  //create line items for stripe
  const line_items = productData.map((item)=>{
