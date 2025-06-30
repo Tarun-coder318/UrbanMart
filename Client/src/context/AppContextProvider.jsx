@@ -30,7 +30,9 @@ const AppContextProvider = ({ children }) => {
       if (data.success) {
         setIsSeller(true);
       } else {
+          if (window.location.pathname.startsWith("/seller")) {
         toast.error(data.message);
+      }
         setIsSeller(false);
       }
     } catch (error) {
