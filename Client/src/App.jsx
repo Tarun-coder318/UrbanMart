@@ -21,7 +21,7 @@ import AddProducts from './pages/Seller/AddProducts.jsx'
 import Order from './pages/Seller/Order.jsx'
 import ProductList from './pages/Seller/ProductList.jsx'
 
-import Spinner from './components/spinner.jsx'
+import Spinner from './components/Spinner.jsx'
 
 
 const App = () => {
