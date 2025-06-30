@@ -1,6 +1,6 @@
 import Order from "../Model/order.js";
 import Product from "../Model/product.js";
-import stripe from "stripe";
+import Stripe from "stripe";
 import User from "../Model/user.js";
 
 
@@ -79,7 +79,7 @@ const order = await Order.create({
   })),amount,address,paymentType:"Online"
 })
 //stripe gateway initialize
- const stripeInstance= new stripe(process.env.STRIPE_SECRETE_KEY);
+ const stripeInstance= new Stripe(process.env.STRIPE_SECRET_KEY);
 
  //create line items for stripe
  const line_items = productData.map((item)=>{
@@ -116,7 +116,7 @@ const order = await Order.create({
 
 //stripe webhooks to verofy payment
 export const stripeWebhooks = async (req, res) => {
-  const stripeInstance = new stripe(process.env.STRIPE_SECRETE_KEY);
+  const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
   const sig = req.headers['stripe-signature'];
   let event ;
   try {
