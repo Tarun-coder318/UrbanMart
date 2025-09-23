@@ -45,12 +45,10 @@ const CardItems = () => {
   const getAddress = async () => {
     try {
       const { data } = await axios.get("/api/address/getAddress");
-      console.log("📦 GET Address Response:", data); // ✅ STEP 1: Check address data
+      console.log("📦 GET Address Response:", data); //   Check address data
 
       if (data.success) {
-        console.log("📥 Addresses received:", data.address); // ✅ correct key
-        console.log("📥 Is array?", Array.isArray(data.address));
-        console.log("📥 Length:", data.address.length);
+       
         setAddresses(data.address);
 
         if (Array.isArray(data.address) && data.address.length > 0) {
@@ -78,7 +76,7 @@ const CardItems = () => {
         quantity: item.quantity,
       }));
 
-      // ✅ Log here to verify
+      // Log here to verify
       console.log("🛒 Sending items to backend:", items);
         const { data } = await axios.post(
           "/api/order/cod",
@@ -100,7 +98,7 @@ const CardItems = () => {
       }));
 
       // ✅ Log here to verify
-      console.log("🛒 Sending items to backend:", items);
+     
         const { data } = await axios.post(
           "/api/order/online",
           
@@ -116,7 +114,7 @@ const CardItems = () => {
           toast.error(error.message)
     }
     finally {
-    setloading(false); // ✅ unlock after action
+    setloading(false); // unlock after action
   }
   };
 

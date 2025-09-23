@@ -19,8 +19,7 @@ const InputField = ({ type, placeholder, name, onChange, address }) => (
 
 const AddAddress = () => {
   const {axios,User,navigate}= useAppContext();
-  console.log("👤 user from context:", User);
-console.log("🆔 user._id:", User?._id);
+
 
   const [address, setAddresses] = useState({
     firstName: "",
@@ -47,7 +46,7 @@ console.log("🆔 user._id:", User?._id);
     e.preventDefault();
       if (!User || !User._id) {
     toast.error("User info is missing. Cannot add address.");
-    console.log("❌ user or user._id is missing:", User);
+
     return;
   }
     try {

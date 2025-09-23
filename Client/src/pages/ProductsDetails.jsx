@@ -14,17 +14,16 @@ const[relatedProducts, setRelatedProducts] = useState([]);
 const [thumbnail, setThumbnail] = useState(null);
 
 const product = products.find((item) => item._id.toString() === id);
-console.log("✅ Matched product:", product);
+
 useEffect(() => {
 if (product&&products.length > 0){
-    console.log("🔍 Current Product:", product);
-    console.log("🔍 All Products:", products);
+   
     let productscpoy= products.slice();
     productscpoy= productscpoy.filter((item) => item.category?.toLowerCase() === product.category?.toLowerCase()  );
-     console.log("🧪 Related products before slice:",productscpoy);
+     
     
     setRelatedProducts(productscpoy.slice(0, 5));
-     console.log("🧪 Related Products:", productscpoy);
+
     
 }
 },[products, product]);

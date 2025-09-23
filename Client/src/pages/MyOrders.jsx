@@ -11,7 +11,7 @@ const MyOrders = () => {
   const fetchorder = async () => {
    try {
      const {data}=await axios('/api/order/getUserOrder')
-     console.log("📦 Raw order data:", data);
+     
     if(data.success){
       // toast.success(data.message)
       setOrder(data.order)

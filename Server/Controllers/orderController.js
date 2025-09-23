@@ -29,7 +29,7 @@ amount +=Math.floor(amount*0.02);
 
 await Order.create({
     userId,  items: items.map(i => ({
-    ...i, // ✅ this preserves quantity
+    ...i, //this preserves quantity
     status: "Order Placed"
   })),amount,address,paymentType:"COD"
 })
@@ -52,7 +52,7 @@ export const placeOrderStripe = async (req,res) => {
         console.log("📥 items received:", items);
 console.log("📬 address received:", address);
 
- console.log("🔑 Stripe Key (Vercel):", process.env.STRIPE_SECRET_KEY);
+ console.log(" Stripe Key (Vercel):", process.env.STRIPE_SECRET_KEY);
 
 if(!address || items.length===0){
     return res.json({success:false, message:'Invalid Data'})
@@ -76,13 +76,13 @@ amount +=Math.floor(amount*0.02);
 
 const order = await Order.create({
     userId,  items: items.map(i => ({
-    ...i, // ✅ this preserves quantity
+    ...i, // this preserves quantity
     status: "Order Placed"
   })),amount,address,paymentType:"Online"
 })
 //stripe gateway initialize
  const stripeInstance= new Stripe(process.env.STRIPE_SECRET_KEY);
- console.log("🔑 Stripe Key:", process.env.STRIPE_SECRET_KEY);
+ console.log(" Stripe Key:", process.env.STRIPE_SECRET_KEY);
 
 
  //create line items for stripe
@@ -121,7 +121,7 @@ const order = await Order.create({
 //stripe webhooks to verofy payment
 export const stripeWebhooks = async (req, res) => {
   const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
-  console.log("🔑 Stripe Key (CHECK):", process.env.STRIPE_SECRET_KEY);
+  console.log("Stripe Key (CHECK):", process.env.STRIPE_SECRET_KEY);
 
   const sig = req.headers['stripe-signature'];
   let event ;
@@ -129,7 +129,7 @@ export const stripeWebhooks = async (req, res) => {
     event = stripeInstance.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
 
   } catch (error) {
-    console.log("❌ Webhook signature error:", error.message);
+    console.log("Webhook signature error:", error.message);
     res.status(400).send(`Webhook Error: ${error.message}`);
   }
   // Handle the event
@@ -146,7 +146,7 @@ export const stripeWebhooks = async (req, res) => {
 
 const session = sessions.data[0];
 if (!session) {
-  console.log("❌ No session found for payment_intent");
+  console.log(" No session found for payment_intent");
   return res.status(404).json({ message: "Session not found" });
 }
 
@@ -156,7 +156,7 @@ const { orderId, userId } = session.metadata;
      await Order.findByIdAndUpdate(orderId, {isPaid:true});
      //clearing cart
     await User.findByIdAndUpdate(userId, {cardItems:{}});
-      console.log("✅ Payment succeeded, Order updated & cart cleared");
+      console.log(" Payment succeeded, Order updated & cart cleared");
  break;
     }
    case "payment_intent.payment_failed":{
@@ -171,7 +171,7 @@ const { orderId, userId } = session.metadata;
       });
       const { orderId} = session.data[0].metadata;
       await Order.findByIdAndDelete(orderId);
-        console.log("🗑️ Payment failed, Order deleted");
+        console.log("Payment failed, Order deleted");
       break;
    }
       default:

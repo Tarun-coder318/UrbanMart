@@ -41,23 +41,23 @@ export const register= async ( req ,res)=>{
  export const login= async (req,res)=>{
      try {
       const{email,password}=req.body;
-       console.log("📥 Login Request:", { email, password });
+     
       if(!email ||!password){
-           console.log("⛔ Missing fields");
+           
         return res.json({success:false,message:"All field are Required"})
       }
       const CheckUserPresent = await User.findOne({email});
       if(!CheckUserPresent){
-         console.log("⛔ No user with this email");
+         
        return res.json({success:false, message:"There is NO User With This Email"})
       }
       const comparePassword = await bcrypt.compare(password, CheckUserPresent.password)
       if(!comparePassword){ 
-          console.log("⛔ Incorrect password");
+        
         return res.json({success:false,message:"Wrong Passwaord"})
       }
       const token = jwt.sign({id:CheckUserPresent._id}, process.env.JWT_KEY,{expiresIn:"7d"});
-    console.log("🍪 Setting cookie");
+
       // Set the cookie with the token
       res.cookie("token" , token, {
            httpOnly:true,
@@ -78,7 +78,7 @@ export const register= async ( req ,res)=>{
  export const isAuth=async (req,res) => {
     try {
       
-        console.log("➡️ isAuth called, req.userId =", req.userId);
+  
         const user = await User.findById(req.userId).select("-password")
         return res.json({success:true , user})
     } catch (error) {
